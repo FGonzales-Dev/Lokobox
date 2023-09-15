@@ -1,8 +1,16 @@
-<div class="product-block {{ grid_class | default: 'grid-flex__item one-quarter small-down--one-half' }}{% if quickbuy %} js-contains-quickbuy{% endif %}"
-{% if animate %} data-cc-animate="{{ animate_style }}"{% if animate > 0 %} data-cc-animate-delay="{{ animate | times: 0.07 }}s"{% endif %}{% endif %}>
+<div
+  class="product-block {{ grid_class | default: 'grid-flex__item one-quarter small-down--one-half' }}{% if quickbuy %} js-contains-quickbuy{% endif %}"
+  {% if animate %}
+    data-cc-animate="{{ animate_style }}"
+    {%- if animate > 0 %} data-cc-animate-delay="{{ animate | times: 0.07 }}s"{% endif -%}
+  {% endif %}
+>
   <div class="product-block__image-container">
     <div class="global-border-radius {% if product.media.size > 1 or settings.product_grid_image_shape == 'natural' or settings.prod_thumb_crop %}hover-images{% endif %} {% if settings.hover_image_enabled == true and product.media.size > 1 %} hover-images--two {% if product.featured_media.preview_image.aspect_ratio == product.media[1].preview_image.aspect_ratio %}same-aspect-ratio{% endif %}{% endif %} relative">
-      <a class="product-block__image product-block__image--shape-{{ settings.product_grid_image_shape }} product-block__image--crop-{{ settings.prod_thumb_crop }} product-block__image--valign-{{ settings.prod_thumb_crop_align }}" href="{{ product.url | within: collection }}">
+      <a
+        class="product-block__image product-block__image--shape-{{ settings.product_grid_image_shape }} product-block__image--crop-{{ settings.prod_thumb_crop }} product-block__image--valign-{{ settings.prod_thumb_crop_align }}"
+        href="{{ product.url }}"
+      >
         {%- if product.featured_media != blank -%}
           <div class="image-one">
             {% liquid
@@ -24,12 +32,18 @@
           </div>
           {%- if settings.hover_image_enabled == true and product.media.size > 1 -%}
             <div class="image-two">
-              <div class="rimage-background fade-in lazyload global-border-radius"
-                   data-bgset="{% render 'bgset', image: product.media[1].preview_image %}"
-                   data-sizes="auto"
-                   data-parent-fit="cover">
+              <div
+                class="rimage-background fade-in lazyload global-border-radius"
+                data-bgset="{% render 'bgset', image: product.media[1].preview_image %}"
+                data-sizes="auto"
+                data-parent-fit="cover"
+              >
                 <noscript>
-                  <img src="{{ product.media[1].preview_image | img_url: '1024x1024' }}" alt="{{ product.media[1].preview_image.alt | escape }}" class="rimage-background__image">
+                  <img
+                    src="{{ product.media[1].preview_image | img_url: '1024x1024' }}"
+                    alt="{{ product.media[1].preview_image.alt | escape }}"
+                    class="rimage-background__image"
+                  >
                 </noscript>
               </div>
             </div>
@@ -41,7 +55,12 @@
 
       {%- if quickbuy -%}
         <div class="product-block__quicklook-btn-container md-down-hidden">
-          <a class="product-block__quicklook-btn btn--quicklook btn btn--primary js-quickbuy-button" href="{{ product.url }}">{{ 'products.quickbuy.quick_buy' | t }}</a>
+          <a
+            class="product-block__quicklook-btn btn--quicklook btn btn--primary js-quickbuy-button"
+            href="{{ product.url }}"
+          >
+            {{- 'products.quickbuy.quick_buy' | t -}}
+          </a>
           {% render 'quick-buy-placeholder', product: product %}
         </div>
       {%- endif -%}
@@ -49,7 +68,7 @@
   </div>
 
   <div class="product-block__title">
-    <a href="{{ product.url | within: collection }}" class="product-block__title-link">{{ product.title }}</a>
+    <a href="{{ product.url}}" class="product-block__title-link">{{ product.title }}</a>
   </div>
 
   {%- if show_vendor -%}
@@ -81,10 +100,14 @@
 
     {% if product.available %}
       {% if cheapest_variant.compare_at_price > cheapest_variant.price and settings.sale_label_enabled %}
-        <span class="product-label product-label--on-sale global-border-radius">{{ 'products.product.on_sale' | t }}</span>
+        <span class="product-label product-label--on-sale global-border-radius">
+          {{- 'products.product.on_sale' | t -}}
+        </span>
       {% endif %}
     {% elsif settings.sold_label_enabled %}
-      <span class="product-label product-label--sold-out global-border-radius">{{ 'products.product.sold_out' | t }}</span>
+      <span class="product-label product-label--sold-out global-border-radius">
+        {{- 'products.product.sold_out' | t -}}
+      </span>
     {% endif %}
   </div>
 
@@ -105,7 +128,6 @@
         {%- if is_swatch == true -%}
           {%- assign product_option_position_0index = product_option.position | minus: 1 -%}
           {%- for product_option_value in product_option.values -%}
-
             {%- liquid
               assign option_value_variant = false
               for variant in product.variants
@@ -122,21 +144,25 @@
               assign swatch_count = swatch_count | plus: 1
             -%}
 
-            <span class="{% if settings.swatch_method == 'image' %}product-swatch-inline__image {% else %}product-swatch-inline__dot {% endif %}rimage-background fade-in lazyload"
+            <span
+              class="{% if settings.swatch_method == 'image' %}product-swatch-inline__image {% else %}product-swatch-inline__dot {% endif %}rimage-background fade-in lazyload"
               data-option-item="{{ product_option_value | downcase | escape }}"
               {%- if settings.swatch_method == 'standard' -%}
                 data-swatch="{{ product_option_value | downcase | replace: '"', '' }}"
               {%- elsif settings.swatch_method == 'image' and option_value_variant.featured_media -%}
-                data-bgset="{{ option_value_variant.featured_media.preview_image | img_url: '80x80', crop: settings.swatch_crop_align }}" data-parent-fit="cover"
-              {%- endif -%}></span>
-
+                data-bgset="{{ option_value_variant.featured_media.preview_image | img_url: '80x80', crop: settings.swatch_crop_align }}"
+                data-parent-fit="cover"
+              {%- endif -%}
+            ></span>
           {%- endfor -%}
         {%- endif -%}
       {%- endfor -%}
 
       {%- if settings.swatch_method == 'image' and swatch_count > swatch_mobile_limit -%}
         {%- assign remaining = swatch_count | minus: swatch_mobile_limit -%}
-        <span class="product-block__swatches-more-label tiny-text">{{ 'collections.general.more_swatches' | t: count: remaining }}</span>
+        <span class="product-block__swatches-more-label tiny-text">
+          {{- 'collections.general.more_swatches' | t: count: remaining -}}
+        </span>
       {%- endif -%}
     </div>
   {%- endif -%}
@@ -147,7 +173,8 @@
       <div class="theme-product-reviews-summary product-block__rating">
         {% render 'rating', rating_value: product.metafields.reviews.rating.value %}
         <span class="cc-rating-custom-caption">
-          {{ rating_count }} {{ 'products.product.reviews_link' | t: count: rating_count | downcase }}
+          {{ rating_count }}
+          {{ 'products.product.reviews_link' | t: count: rating_count | downcase }}
         </span>
       </div>
     {%- endif -%}
